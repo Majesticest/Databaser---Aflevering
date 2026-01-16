@@ -1,6 +1,6 @@
 package org.example;
 import java.sql.*;
-import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -9,7 +9,7 @@ public class Main {
         if (connection != null) {
             try {
                 showDB();
-
+                System.out.println("This works");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
