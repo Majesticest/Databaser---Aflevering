@@ -53,12 +53,13 @@ public class Main {
 
         //Display products and stock availability
         while(resultSet.next()){
+            int lowSupply = 100;
             int id = resultSet.getInt("productID");
             int price = resultSet.getInt("price");
             String name = resultSet.getString("name");
             int amount = resultSet.getInt("amount");
 
-            if(amount > 100){
+            if(amount > lowSupply){
                 System.out.println("nr "+id+" product: "+name+" | "+ price+" kr");
             } else if (amount == 0) {
                 System.out.println("nr "+id+" product: "+name+" | "+ price+" kr"+" Sold out");
