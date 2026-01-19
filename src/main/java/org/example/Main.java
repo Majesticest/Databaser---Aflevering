@@ -9,8 +9,9 @@ public class Main {
         if (connection != null) {
             try {
                 // Select which account the user would like to continue with.
-                selectUser();
+                int accountChoice = selectUser();
                 //
+                productBrowser();
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -18,11 +19,10 @@ public class Main {
         }
     }
 
-
     private static int selectUser() throws SQLException {
         connectDB db = new connectDB();
         Connection connection = db.getLocalConnection();
-        // new reader
+        // new reader for method
         Scanner reader = new Scanner(System.in);
         //accountChoice
         int accountChoice= 0;
