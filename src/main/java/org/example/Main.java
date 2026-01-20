@@ -10,8 +10,8 @@ public class Main {
             try {
                 // Select which account the user would like to continue with.
                 int accountChoice = selectUser();
-                //
-                productBrowser();
+                //Displays all products regardless of availability
+                productBrowser.displayProducts();
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -44,14 +44,6 @@ public class Main {
             } else {
                 System.out.println("Please enter a correct ID");
 
-            }
-        }
-
-
-
         return accountChoice;
-
     }
-
-
-    }
+}
