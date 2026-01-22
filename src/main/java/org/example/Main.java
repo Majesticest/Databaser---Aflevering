@@ -29,7 +29,7 @@ public class Main {
         }
     }
 
-    private static int selectUser() throws SQLException {
+    public static int selectUser() throws SQLException {
         connectDB db = new connectDB();
         Connection connection = db.getLocalConnection();
         // new reader for method
