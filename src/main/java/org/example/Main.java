@@ -35,7 +35,7 @@ public class Main {
             System.out.println("ID " + (id + 1) + " name " + name);
         }
 
-        while (validInput == false) {
+        while (!validInput) {
             System.out.println("choose account (1-4): ");
             accountChoice = reader.nextInt();
             if (1 <= accountChoice && accountChoice <= 4) {
