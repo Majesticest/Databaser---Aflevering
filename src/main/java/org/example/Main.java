@@ -4,6 +4,15 @@ import java.util.Scanner;
 
 public class Main {
     public static int accountChoice;
+
+    static {
+        try {
+            accountChoice = selectUser();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
         connectDB db = new connectDB();
         Connection connection = db.getLocalConnection();
