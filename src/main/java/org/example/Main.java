@@ -8,13 +8,11 @@ public class Main {
 
         if (connection != null) {
             try {
+                Storefront storefront = new Storefront(connection);
+                Menu menu = new Menu(storefront);
+                menu.run();
                 // Select which account the user would like to continue with.
-                int accountChoice = selectUser.selectUser();
 
-                //Displays all products regardless of availability
-                productBrowser.displayProducts();
-
-                System.out.println(accountChoice); //test of accountchoice variable DEBUG
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
