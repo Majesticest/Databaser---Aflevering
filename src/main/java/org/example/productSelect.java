@@ -29,17 +29,20 @@ public class productSelect {
             System.out.println("nr " + id +" | Product: "+ name);
             System.out.println("price: "+ price + "kr | amount: "+ amount + " | "+CatID);
 
-            return productSelection;
 
         }
 
         //valgmuligheder, altså vil kunden købe eller noget andet, idfk
-        System.out.println("Options: back | buy | quit");
-        String options = reader.next();
-        switch (options.toLowerCase(Locale.ROOT).trim()) {
-            case "back" -> productBrowser.displayProducts();
-            case "buy" -> {}
-            case "quit" -> {
+        System.out.println("""
+                Options:\s
+                1. back
+                2. buy\s
+                3. quit""");
+        int options = reader.nextInt();
+        switch (options) {
+            case 1 -> productBrowser.displayProducts();
+            case 2 -> {}
+            case 3 -> {
                 resultSet.close();
                 stmt.close();
                 connection.close();}
