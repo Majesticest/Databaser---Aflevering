@@ -17,7 +17,7 @@ record Product(int id, int categoriID, String name, int amount, int price, Strin
     }
 
 }
-
+record Stores(int id, String Address, int postnr){}
 
 
 public class Storefront {
@@ -38,16 +38,16 @@ public class Storefront {
         }
         return users;
     }
-        public List<Product> getProducts(int maxPrice) throws SQLException{
-            Statement stmt = this.connection.createStatement();
-            
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM product JOIN category ON (product.categoryID=category.categoryID) WHERE price <= " + maxPrice);
-            List<Product> products= new ArrayList<>();
-            while (resultSet.next()) {
-                products.add(getProduct(resultSet));
-            }
-            return products;
+    public List<Product> getProducts(int maxPrice) throws SQLException{
+        Statement stmt = this.connection.createStatement();
+
+        ResultSet resultSet = stmt.executeQuery("SELECT * FROM product JOIN category ON (product.categoryID=category.categoryID) WHERE price <= " + maxPrice);
+        List<Product> products= new ArrayList<>();
+        while (resultSet.next()) {
+            products.add(getProduct(resultSet));
         }
+        return products;
+    }
 
     public Product getProduct(int productID) throws SQLException {
         Statement stmt = this.connection.createStatement();
@@ -68,5 +68,14 @@ public class Storefront {
         String category = resultSet.getString("categoryName");
         return new Product(id, catId, name, amount, price, category);
     }
+    public List<Stores> getStores() throws SQLException {
+        Statement stmt = this.connection.createStatement();
 
+        ResultSet resultSet = stmt.executeQuery("SELECT * FROM shop");
+        List<Stores> stores= new ArrayList<>();
+        while (resultSet.next()) {
+            stores.add(new Stores(resultSet.getInt("shopID"), resultSet.getString("shopAddress"), resultSet.getInt("postnr")));
+        }
+        return stores;
+    }
 }

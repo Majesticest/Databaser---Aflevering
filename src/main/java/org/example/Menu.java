@@ -28,32 +28,33 @@ public class Menu {
             System.out.println("""
                     1. View all products
                     2. Show available shops
-                    3. Inspect product
-                    4. Exit program
+                    3. Exit program
                     """);
             int menuID = reader.nextInt();
             switch (menuID) {
                 case 1:
-                    System.out.println("Press 0 to return to menu");
                     showAllProducts(loggedInUser);
-                    break;
-
-                case 3:
-                    while (true) {
-                        showAllProducts(loggedInUser);
-                        System.out.println("Please select product to view details for");
-                        int productID = reader.nextInt();
-                        try {
-                            showProductDetails(productID);
-                            break;
-                        } catch (SQLException e) {
-                            System.out.println(e.getMessage());
+                    System.out.println("Select product? (yes: 1, no: 0)");
+                    int SelectProd = reader.nextInt();
+                    if (SelectProd == 1) {
+                        while (true) {
+                            System.out.println("Please select product to view details for");
+                            int productID = reader.nextInt();
+                            try {
+                                showProductDetails(productID);
+                                break;
+                            } catch (SQLException e) {
+                                System.out.println(e.getMessage());
+                            }
                         }
+                        break;
+                    }else{
+                        break;
                     }
+                case 2:
+                    showAllStores();
                     break;
-
-
-                case 4:
+                case 3:
                     System.exit(0);
 
             }
@@ -66,10 +67,9 @@ public class Menu {
 
     private void showAllProducts(User loggedInUser) throws SQLException {
 
-
         List<Product> products = storefront.getProducts(loggedInUser.wallet());
         if (products.isEmpty()){
-            System.out.println("Sorry, you don't have enough maney to buy anything. You only have: " + loggedInUser.wallet());
+            System.out.println("Sorry, you don't have enough money to buy anything. You only have: " + loggedInUser.wallet());
         }
         for (Product p : products) {
 
@@ -113,6 +113,12 @@ public class Menu {
             }
         }
         return user;
+    }
+    private void showAllStores() throws SQLException {
+        List<Stores> stores = storefront.getStores();
+        for (Stores s : stores) {
+            System.out.println(String.format("%d %s %d", s.id(),s.Address(),s.postnr()));
+        }
     }
 
 
