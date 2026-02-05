@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+//denne class er lavet til alle front end operationer som brugeren
+//kommer til at benytte sig af.
+
 public class Menu {
     private final Scanner reader;
     Storefront storefront;
@@ -25,6 +28,7 @@ public class Menu {
             if (loggedInUser == null) {
                 loggedInUser = this.logInUser();
             }
+            //System choice prompt
             System.out.println(String.format("Hello %s what do you want to do?", loggedInUser.name()));
             System.out.println("""
                     1. View all products
@@ -35,6 +39,7 @@ public class Menu {
             int menuID = reader.nextInt();
             switch (menuID) {
                 case 1:
+                    //displays all products before selecting
                     showAllProducts(loggedInUser);
                     System.out.println("Inspect product? (yes: 1, no: 0)");
                     int selctProd = reader.nextInt();
@@ -114,6 +119,7 @@ public class Menu {
         return catfilter;
     }
 
+    //displays all available products
     private void showAllProducts(User loggedInUser) throws SQLException {
 
         List<Product> products = storefront.getProducts(loggedInUser.wallet());
@@ -125,7 +131,7 @@ public class Menu {
             System.out.println(String.format("%d, %s, %d kr", p.id(), p.name(), p.price()));
         }
     }
-
+//fremviser alt info om product, viser også dens stock info.
     private void showProductDetails(int productID) throws SQLException {
         Product p = storefront.getProduct(productID);
         String extra = "";
@@ -149,7 +155,7 @@ public class Menu {
 
 
     }
-
+// methode til at vælge en account til brugeren, der er 4 kontoer i alt til at vælge mellem.
     public User logInUser() throws SQLException {
         User user = null;
 
@@ -175,6 +181,7 @@ public class Menu {
         }
         return user;
     }
+    //printer alle butikerne som er en del af kæden.
     private void showAllStores() throws SQLException {
         List<Stores> stores = storefront.getStores();
         for (Stores s : stores) {
