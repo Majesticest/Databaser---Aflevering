@@ -140,6 +140,9 @@ public class Menu {
 
     private void filterProducts(int maxPrice, List<Integer> categories) throws SQLException {
         List<Product> products = storefront.filterProduct(maxPrice, categories);
+        if (products.isEmpty()){
+            System.out.println("No products matches your filter");
+        }
         for (Product p : products){
             System.out.println(String.format("%d, %s, %d kr, %d in stock, %s", p.id(), p.name(), p.price(), p.amount(), p.category()));
         }
