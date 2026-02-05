@@ -35,9 +35,10 @@ public class Menu {
                 case 1:
                     showAllProducts(loggedInUser);
                     System.out.println("Select product? (yes: 1, no: 0)");
-                    int SelectProd = reader.nextInt();
-                    if (SelectProd == 1) {
+                    int selctProd = reader.nextInt();
+                    if (selctProd == 1){
                         while (true) {
+                            showAllProducts(loggedInUser);
                             System.out.println("Please select product to view details for");
                             int productID = reader.nextInt();
                             try {
@@ -47,10 +48,13 @@ public class Menu {
                                 System.out.println(e.getMessage());
                             }
                         }
+                    } else if (selctProd == 0) {
                         break;
-                    }else{
-                        break;
+                    } else {
+                        System.out.println("Please enter a valid ID");
                     }
+
+
                 case 2:
                     showAllStores();
                     break;
@@ -73,7 +77,7 @@ public class Menu {
         }
         for (Product p : products) {
 
-            System.out.println(String.format("%d %s %d ", p.id(), p.name(), p.price()));
+            System.out.println(String.format("%d, %s, %d kr", p.id(), p.name(), p.price()));
         }
     }
 
@@ -85,7 +89,7 @@ public class Menu {
         } else if (p.isLowInStock()) {
             extra = "Low stock";
         }
-        System.out.println(String.format("%d %s %d %d %s", p.id(), p.name(), p.price(), p.amount(), p.category(), extra));
+        System.out.println(String.format("%d, %s, %d kr, %d in stock, %s", p.id(), p.name(), p.price(), p.amount(), p.category(), extra));
 
     }
 
