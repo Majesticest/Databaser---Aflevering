@@ -70,7 +70,7 @@ public class Storefront {
         String catFilter = "";
         for (int i = 0; i < categories.size(); i++) {
             Integer cat = categories.get(i);
-            if (i > 0){
+            if (i > 0) {
                 catFilter += ", "; //Don't add comma before first entry
             }
             catFilter += cat;
@@ -101,14 +101,43 @@ public class Storefront {
         return new Product(id, catId, name, amount, price, category);
     }
 
-    public List<Stores> getStores() throws SQLException {
+    public List<Store> getStores() throws SQLException {
         Statement stmt = this.connection.createStatement();
 
         ResultSet resultSet = stmt.executeQuery("SELECT * FROM shop");
-        List<Stores> stores = new ArrayList<>();
+        List<Store> stores = new ArrayList<>();
         while (resultSet.next()) {
-            stores.add(new Stores(resultSet.getInt("shopID"), resultSet.getString("shopAddress"), resultSet.getInt("postnr")));
+            stores.add(new Store(resultSet.getInt("shopID"), resultSet.getString("shopAddress"), resultSet.getInt("postnr")));
         }
         return stores;
+    }
+
+    public void updateStock(int productID, int shopID, int change) throws SQLException {
+        // change is the number to increase or decrease the given products stock with
+        // i.e. -1 when selling an item
+        Statement stmt = this.connection.createStatement();
+
+        stmt.executeUpdate("UPDATE palager SET stock = stock + " + change +
+                " WHERE productID = " + productID +
+                " AND shopID = " + shopID
+        );
+
+    }
+
+    public List<Product> getStoreProducts(int shopID) throws SQLException {
+        Statement stmt = this.connection.createStatement();
+
+        ResultSet resultSet = stmt.executeQuery(
+                ("SELECT product.*, categoryName FROM palager " +
+                        "JOIN product ON palager.productID=product.productID " +
+                        "JOIN category ON product.categoryID=category.categoryID " +
+                        "WHERE shopID = %d " +
+                        "ORDER BY productID").formatted(shopID)
+        );
+        List<Product> products = new ArrayList<>();
+        while (resultSet.next()) {
+            products.add(getProduct(resultSet));
+        }
+        return products;
     }
 }

@@ -29,12 +29,13 @@ public class Menu {
                 loggedInUser = this.logInUser();
             }
             //System choice prompt
-            System.out.println(String.format("Hello %s what do you want to do?", loggedInUser.name()));
+            System.out.println(String.format("\nHello %s what do you want to do?", loggedInUser.name()));
             System.out.println("""
                     1. View all products
                     2. Filter products
                     3. Show available shops
-                    4. Exit program
+                    4. List products in specifik store
+                    5. Exit program
                     """);
             int menuID = reader.nextInt();
             switch (menuID) {
@@ -73,7 +74,28 @@ public class Menu {
                 case 3:
                     showAllStores();
                     break;
+
                 case 4:
+                    System.out.println("Select a store:");
+                    List<Store> stores = showAllStores();
+                    boolean found=false;
+                    int shopID=-1;
+                    while (!found){
+                        shopID = reader.nextInt();
+                        for (Store s : stores){
+                            if (shopID == s.id()){
+                                found = true;
+                            }
+                        }
+
+                    }
+                    List<Product> products = storefront.getStoreProducts(shopID);
+                    for (Product p : products){
+                        System.out.println(String.format("%d, %s, %d kr", p.id(), p.name(), p.price()));
+                    }
+                    break;
+
+                case 5:
                     System.exit(0);
 
             }
@@ -182,11 +204,12 @@ public class Menu {
         return user;
     }
     //printer alle butikerne som er en del af kæden.
-    private void showAllStores() throws SQLException {
-        List<Stores> stores = storefront.getStores();
-        for (Stores s : stores) {
+    private List<Store> showAllStores() throws SQLException {
+        List<Store> stores = storefront.getStores();
+        for (Store s : stores) {
             System.out.println(String.format("%d %s %d", s.id(),s.Address(),s.postnr()));
         }
+        return stores;
     }
 
 
