@@ -34,7 +34,7 @@ public class Menu {
                     1. View all products
                     2. Filter products
                     3. Show available shops
-                    4. List products in specifik store
+                    4. List products in specific store
                     5. Exit program
                     """);
             int menuID = reader.nextInt();
@@ -97,6 +97,18 @@ public class Menu {
 
                 case 5:
                     System.exit(0);
+
+                case 6:
+                    System.out.println("Create a new User, Name:");
+                    String name = reader.next();
+                    System.out.println("Postnumber:");
+                    int postnr =  reader.nextInt();
+                    System.out.println("Money:");
+                    int wallet =  reader.nextInt();
+                    System.out.println("address");
+                    String Address = reader.next();
+                    storefront.createUser(name, postnr, wallet, Address);
+                    storefront.getUsers();
 
             }
 
