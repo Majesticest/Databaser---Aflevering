@@ -138,7 +138,6 @@ public class Storefront {
         return products;
     }
     public void createUser(String name, int postnr, int wallet, String address) throws SQLException {
-        Statement stmt = this.connection.createStatement();
         PreparedStatement statement = connection.prepareStatement("INSERT INTO customer (name, postnr, wallet,customerAddress) VALUES (?,?,?,?)");
         statement.setString(1, name);
         statement.setInt(2, postnr);
