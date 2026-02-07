@@ -29,7 +29,7 @@ public class Menu {
                 loggedInUser = this.logInUser();
             }
             //System choice prompt
-            System.out.println(String.format("\nHello %s what do you want to do?", loggedInUser.name()));
+            System.out.printf("\nHello %s what do you want to do?%n", loggedInUser.name());
             System.out.println("""
                     1. View all products
                     2. Filter products
@@ -83,46 +83,39 @@ public class Menu {
                     while (!found){
                         shopID = reader.nextInt();
                         for (Store s : stores){
-                            if (shopID == s.id()){
+                            if (shopID == s.id()) {
                                 found = true;
+                                break;
                             }
                         }
-
                     }
                     List<Product> products = storefront.getStoreProducts(shopID);
                     for (Product p : products){
-                        System.out.println(String.format("%d, %s, %d kr", p.id(), p.name(), p.price()));
+                        System.out.printf("%d, %s, %d kr%n", p.id(), p.name(), p.price());
                     }
                     break;
 
                 case 5:
                     System.exit(0);
+                    // Denne case står gemt for en sikkerheds skyld.
+                    // Selvom den er ikke særligt beskyttet
 
                 case 6:
-                    System.out.println("Create a new User, Name:");
-                    String name = reader.next();
-                    System.out.println("Postnumber:");
-                    int postnr =  reader.nextInt();
-                    System.out.println("Money:");
-                    int wallet =  reader.nextInt();
-                    System.out.println("address");
-                    String Address = reader.next();
-                    storefront.createUser(name, postnr, wallet, Address);
-                    storefront.getUsers();
-
+                    System.out.println("create or delete account? (create: 1, delete: 0, back: other keys)");
+                    int choice = reader.nextInt();
+                    if (choice == 1){createUser();}
+                    //loggedInUser bliver brugt for at stoppe brugeren i at slette den nuværende konto.
+                    else if (choice==0) {deleteUser(loggedInUser);}
+                    else {break;}
             }
-
-
         }
-
-
     }
 
     private List<Integer> getCatfilter() throws SQLException {
         List<ProductCategory> categories = storefront.getCategories();
         System.out.println("Select categories to filter by. Single enter to use filter:");
         for (ProductCategory cat:categories){
-            System.out.println(String.format("%d: %s", cat.id(), cat.categoryName()));
+            System.out.printf("%d: %s%n", cat.id(), cat.categoryName());
 
         }
         List<Integer> catfilter = new ArrayList<>();
@@ -162,7 +155,7 @@ public class Menu {
         }
         for (Product p : products) {
 
-            System.out.println(String.format("%d, %s, %d kr", p.id(), p.name(), p.price()));
+            System.out.printf("%d, %s, %d kr%n", p.id(), p.name(), p.price());
         }
     }
 //fremviser alt info om product, viser også dens stock info.
@@ -174,17 +167,17 @@ public class Menu {
         } else if (p.isLowInStock()) {
             extra = "Low stock";
         }
-        System.out.println(String.format("%d, %s, %d kr, %d in stock, %s", p.id(), p.name(), p.price(), p.amount(), p.category(), extra));
+        System.out.printf("%d, %s, %d kr, %d in stock, %s%n", p.id(), p.name(), p.price(), p.amount(), p.category(), extra);
 
     }
-
+//filterer produkter.
     private void filterProducts(int maxPrice, List<Integer> categories) throws SQLException {
         List<Product> products = storefront.filterProduct(maxPrice, categories);
         if (products.isEmpty()){
             System.out.println("No products matches your filter");
         }
         for (Product p : products){
-            System.out.println(String.format("%d, %s, %d kr, %d in stock, %s", p.id(), p.name(), p.price(), p.amount(), p.category()));
+            System.out.printf("%d, %s, %d kr, %d in stock, %s%n", p.id(), p.name(), p.price(), p.amount(), p.category());
         }
 
 
@@ -219,10 +212,44 @@ public class Menu {
     private List<Store> showAllStores() throws SQLException {
         List<Store> stores = storefront.getStores();
         for (Store s : stores) {
-            System.out.println(String.format("%d %s %d", s.id(),s.Address(),s.postnr()));
+            System.out.printf("%d %s %d%n", s.id(),s.Address(),s.postnr());
         }
         return stores;
     }
+//giver brugeren lov til at lave nye kontoer
+    private void createUser () throws SQLException {
+        System.out.println("Create a new User, Name:");
+        String name = reader.next();
+        System.out.println("Postnumber:");
+        int postnr =  reader.nextInt();
+        System.out.println("Money:");
+        int wallet =  reader.nextInt();
+        System.out.println("address");
+        String Address = reader.next();
+        storefront.createUser(name, postnr, wallet, Address);
+        storefront.getUsers();
 
+    }
+    //giver brugeren lov til at slette kontoer
+    private void deleteUser(User user) throws SQLException {
+        List<User> users = storefront.getUsers();
 
+        System.out.println("Choose account: ");
+        for (User u : users) {
+            System.out.println(u.id() + "\t" + u.name());}
+
+        int id = reader.nextInt();
+
+        //account deletion confirmation/failsafe
+        if (id == user.id()) {
+            System.out.println("You cannot delete this user");
+        } else {
+            System.out.println("Are you sure you want to delete this user? (1: yes, 0: no)");
+            int deleteUser = reader.nextInt();
+            if (deleteUser == 1) {
+                storefront.deleteUser(id);
+            }
+        }
+
+    }
 }

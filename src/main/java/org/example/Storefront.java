@@ -145,4 +145,8 @@ public class Storefront {
         statement.setString(4, address);
         statement.execute();
     }
+    public void deleteUser(int id) throws SQLException {
+        Statement stmt = this.connection.createStatement();
+        stmt.executeUpdate("DELETE FROM customer WHERE customerID = " + id);
+    }
 }
