@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//This class is obsessed with SQL. it is the only thing it ever talks about.
 
 public class Storefront {
     Connection connection;
@@ -26,6 +27,7 @@ public class Storefront {
         return users;
     }
 
+    //does the same as above but for categories
     public List<ProductCategory> getCategories() throws SQLException {
         Statement stmt = this.connection.createStatement();
         ResultSet resultSet = stmt.executeQuery("SELECT categoryID,categoryName FROM category");
@@ -62,6 +64,7 @@ public class Storefront {
         return getProduct(resultSet);
     }
 
+    //Creates a list for the items with the specified filter, and removes the things you cannot afford. Mostly to spare your feelings.
     public List<Product> filterProduct(int maxPrice, List<Integer> categories) throws SQLException {
         Statement stmt = this.connection.createStatement();
         String catFilter = "";
@@ -98,6 +101,7 @@ public class Storefront {
         return new Product(id, catId, name, amount, price, category);
     }
 
+    //Make list of all stores (and their data).
     public List<Store> getStores() throws SQLException {
         Statement stmt = this.connection.createStatement();
 
@@ -109,6 +113,7 @@ public class Storefront {
         return stores;
     }
 
+    //can change the stock amount
     public void updateStock(int productID, int shopID, int change) throws SQLException {
         // change is the number to increase or decrease the given products stock with
         // i.e. -1 when selling an item
@@ -121,6 +126,7 @@ public class Storefront {
 
     }
 
+    //makes a list of products in specific store
     public List<Product> getStoreProducts(int shopID) throws SQLException {
         Statement stmt = this.connection.createStatement();
 
@@ -137,6 +143,8 @@ public class Storefront {
         }
         return products;
     }
+
+    //creator of accounts
     public void createUser(String name, int postnr, int wallet, String address) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO customer (name, postnr, wallet,customerAddress) VALUES (?,?,?,?)");
         statement.setString(1, name);
@@ -145,6 +153,8 @@ public class Storefront {
         statement.setString(4, address);
         statement.execute();
     }
+
+    //scary account killer, small but deadly ngl
     public void deleteUser(int id) throws SQLException {
         Statement stmt = this.connection.createStatement();
         stmt.executeUpdate("DELETE FROM customer WHERE customerID = " + id);
