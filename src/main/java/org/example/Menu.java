@@ -35,7 +35,8 @@ public class Menu {
                     2. Filter products
                     3. Show available shops
                     4. List products in specific store
-                    5. Exit program
+                    5. Create new account
+                    6. Exit program
                     """);
             int menuID = reader.nextInt();
             switch (menuID) {
@@ -94,19 +95,20 @@ public class Menu {
                         System.out.printf("%d, %s, %d kr%n", p.id(), p.name(), p.price());
                     }
                     break;
-
                 case 5:
-                    System.exit(0);
-                    // Denne case står gemt for en sikkerheds skyld.
-                    // Selvom den er ikke særligt beskyttet
-
-                case 6:
                     System.out.println("create or delete account? (create: 1, delete: 0, back: other keys)");
                     int choice = reader.nextInt();
                     if (choice == 1){createUser();}
                     //loggedInUser bliver brugt for at stoppe brugeren i at slette den nuværende konto.
                     else if (choice==0) {deleteUser(loggedInUser);}
                     else {break;}
+
+                case 6:
+                    System.exit(0);
+                    // Denne case står gemt for en sikkerheds skyld.
+                    // Selvom den er ikke særligt beskyttet
+
+
             }
         }
     }
