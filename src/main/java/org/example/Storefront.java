@@ -1,9 +1,6 @@
 package org.example;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,5 +136,13 @@ public class Storefront {
             products.add(getProduct(resultSet));
         }
         return products;
+    }
+    public void createUser(String name, int postnr, int wallet, String address) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO customer (name, postnr, wallet,customerAddress) VALUES (?,?,?,?)");
+        statement.setString(1, name);
+        statement.setInt(2, postnr);
+        statement.setInt(3, wallet);
+        statement.setString(4, address);
+        statement.execute();
     }
 }
