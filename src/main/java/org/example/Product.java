@@ -1,6 +1,5 @@
 package org.example;
 
-import java.util.Objects;
 
 
 public record Product(int id, int categoryID, String name, int amount, int price, String category) {
