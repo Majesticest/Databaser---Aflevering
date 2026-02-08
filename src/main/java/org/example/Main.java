@@ -1,6 +1,8 @@
 package org.example;
 import java.sql.*;
 
+// Our main can be described as this meme: https://imgflip.com/i/ajjnw8
+
 public class Main {
     public static void main(String[] args) {
         connectDB db = new connectDB();
@@ -11,8 +13,6 @@ public class Main {
                 Storefront storefront = new Storefront(connection);
                 Menu menu = new Menu(storefront);
                 menu.run();
-                // Select which account the user would like to continue with.
-
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
