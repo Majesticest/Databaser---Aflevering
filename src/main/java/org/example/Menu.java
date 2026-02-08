@@ -31,7 +31,8 @@ public class Menu {
                 2. Filter products
                 3. Show available shops
                 4. List products in specific store
-                5. Exit program
+                5. Buy products
+                6. Exit program
                 """);
         int menuID = reader.nextInt();
         switch (menuID) {
@@ -91,11 +92,20 @@ public class Menu {
                 break;
 
             case 5:
+                List<Integer> orderItems = getOrderItems();
+                if (orderItems.isEmpty()){
+                    System.out.println("Order aborted");
+                    break;
+                }
+                int orderID = storefront.createOrder(loggedInUser.id(), orderItems);
+                System.out.println("Your order has been submitted with the follwing id: " + orderID);
+                break;
+            case 6:
                 System.exit(0);
 
             // Denne case står gemt for en sikkerheds skyld.
             // Selvom den er ikke særligt beskyttet
-            case 6:
+            case 7:
                 System.out.println("create or delete account? (create: 1, delete: 0, back: other keys)");
                 int choice = reader.nextInt();
                 if (choice == 1){createUser();}
@@ -223,7 +233,7 @@ public class Menu {
         System.out.println("Create a new User, Name:");
         String name = reader.next();
 
-        System.out.println("Postnumber:");
+        System.out.println("Postnummer:");
         int postnr = reader.nextInt();
 
         System.out.println("Money:");
@@ -259,4 +269,39 @@ public class Menu {
         }
 
     }
+    private List<Integer> getOrderItems() throws SQLException {
+        List<Product> products = storefront.getProducts(100000000);
+        System.out.println("Which products would you like to buy: ");
+        for (Product p:products){
+            System.out.println(String.format("%d: %s, %d kr", p.id(), p.name(), p.price()));
+
+        }
+        List<Integer> productIDs = new ArrayList<>();
+        reader.nextLine(); // makes the code work properly
+        while (true){
+            String productFilter = reader.nextLine();
+            if (productFilter.isEmpty()){
+                //no more filters to add
+                break;
+            }
+            try {
+                int prodID = Integer.parseInt(productFilter);
+                boolean validCatID = false;
+                for (Product product:products){
+                    if (product.id()== prodID){
+                        productIDs.add(prodID);
+                        validCatID = true;
+                        break;
+                    }
+                }
+                if (!validCatID){
+                    System.out.println("Illegal input");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Illegal input");
+            }
+        }
+        return productIDs;
+    }
+
 }

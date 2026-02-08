@@ -159,4 +159,22 @@ public class Storefront {
         Statement stmt = this.connection.createStatement();
         stmt.executeUpdate("DELETE FROM customer WHERE customerID = " + id);
     }
+    public int createOrder(int customerID, List<Integer> productIDs) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO orders (customerID) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, customerID);
+        statement.execute();
+        ResultSet generatedKeys = statement.getGeneratedKeys();
+        if (!generatedKeys.next()){
+            throw new SQLException("Database didn't return orderID");
+        }
+        int orderID = generatedKeys.getInt(1);
+        for (int prodID : productIDs){
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO orderItem (orderID, productID) VALUES (?,?)");
+            stmt.setInt(1, orderID);
+            stmt.setInt(2, prodID);
+            stmt.execute();
+        }
+        return orderID;
+
+    }
 }
