@@ -4,7 +4,7 @@ import java.sql.*;
 // Our main can be described as this meme: https://imgflip.com/i/ajjnw8
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         connectDB db = new connectDB();
         Connection connection = db.getLocalConnection();
 
