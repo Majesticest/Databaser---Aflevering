@@ -13,6 +13,8 @@ public class Storefront {
         this.connection = connection;
     }
 
+    //User Methods ------------------------------------------------------------------
+
     //creates a list of all users in the database using the record class
     public List<User> getUsers() throws SQLException {
         Statement stmt = this.connection.createStatement();
@@ -27,21 +29,25 @@ public class Storefront {
         return users;
     }
 
-    //does the same as above but for categories
-    public List<ProductCategory> getCategories() throws SQLException {
-        Statement stmt = this.connection.createStatement();
-        ResultSet resultSet = stmt.executeQuery("SELECT categoryID,categoryName FROM category");
-        List<ProductCategory> categories = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("categoryID");
-            String name = resultSet.getString("categoryName");
-
-            categories.add(new ProductCategory(id, name));
-        }
-        return categories;
+    //creator of accounts
+    public void createUser(String name, int postnr, int wallet, String address) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO customer (name, postnr, wallet,customerAddress) VALUES (?,?,?,?)");
+        statement.setString(1, name);
+        statement.setInt(2, postnr);
+        statement.setInt(3, wallet);
+        statement.setString(4, address);
+        statement.execute();
     }
 
-    //does the same as above but for products
+    //scary account killer, small but deadly ngl
+    public void deleteUser(int id) throws SQLException {
+        Statement stmt = this.connection.createStatement();
+        stmt.executeUpdate("DELETE FROM customer WHERE customerID = " + id);
+    }
+
+    //Product Methods ---------------------------------------------------------------
+
+    //fetches all available products
     public List<Product> getProducts(int maxPrice) throws SQLException {
         Statement stmt = this.connection.createStatement();
 
@@ -63,6 +69,19 @@ public class Storefront {
         }
         return getProduct(resultSet);
     }
+
+    //allows for the two previous functions work by compiling all fetched data for a single product into a Product
+    private static Product getProduct(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("productID");
+        int catId = resultSet.getInt("categoryID");
+        String name = resultSet.getString("name");
+        int amount = resultSet.getInt("amount");
+        int price = resultSet.getInt("price");
+        String category = resultSet.getString("categoryName");
+        return new Product(id, catId, name, amount, price, category);
+    }
+
+    //filter methods ----------------------------------------------------------------
 
     //Creates a list for the items with the specified filter, and removes the things you cannot afford. Mostly to spare your feelings.
     public List<Product> filterProduct(int maxPrice, List<Integer> categories) throws SQLException {
@@ -90,16 +109,21 @@ public class Storefront {
         return products;
     }
 
-    //allows for the two previous functions work by compiling all fetched data for a single product into a Product
-    private static Product getProduct(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("productID");
-        int catId = resultSet.getInt("categoryID");
-        String name = resultSet.getString("name");
-        int amount = resultSet.getInt("amount");
-        int price = resultSet.getInt("price");
-        String category = resultSet.getString("categoryName");
-        return new Product(id, catId, name, amount, price, category);
+    //fetches all categories from db
+    public List<ProductCategory> getCategories() throws SQLException {
+        Statement stmt = this.connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery("SELECT categoryID,categoryName FROM category");
+        List<ProductCategory> categories = new ArrayList<>();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("categoryID");
+            String name = resultSet.getString("categoryName");
+
+            categories.add(new ProductCategory(id, name));
+        }
+        return categories;
     }
+
+    //store methods -----------------------------------------------------------------
 
     //Make list of all stores (and their data).
     public List<Store> getStores() throws SQLException {
@@ -144,25 +168,14 @@ public class Storefront {
         return products;
     }
 
-    //creator of accounts
-    public void createUser(String name, int postnr, int wallet, String address) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO customer (name, postnr, wallet,customerAddress) VALUES (?,?,?,?)");
-        statement.setString(1, name);
-        statement.setInt(2, postnr);
-        statement.setInt(3, wallet);
-        statement.setString(4, address);
-        statement.execute();
-    }
+    //Order methods -----------------------------------------------------------------
 
-    //scary account killer, small but deadly ngl
-    public void deleteUser(int id) throws SQLException {
-        Statement stmt = this.connection.createStatement();
-        stmt.executeUpdate("DELETE FROM customer WHERE customerID = " + id);
-    }
+    //creates a new order.
     public int createOrder(int customerID, List<Integer> productIDs) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO orders (customerID) VALUES (?)", Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, customerID);
         statement.execute();
+
         ResultSet generatedKeys = statement.getGeneratedKeys();
         if (!generatedKeys.next()){
             throw new SQLException("Database didn't return orderID");
@@ -173,6 +186,7 @@ public class Storefront {
             stmt.setInt(1, orderID);
             stmt.setInt(2, prodID);
             stmt.execute();
+
         }
         return orderID;
 
