@@ -191,4 +191,21 @@ public class Storefront {
         return orderID;
 
     }
+
+    public TopStore useless() throws SQLException{
+        Statement stmt = this.connection.createStatement();
+        ResultSet resultSet = stmt.executeQuery("""
+                SELECT palager.shopID, sum(Stock) AS pants, shopAddress FROM product
+                JOIN palager ON product.productID = palager.productID
+                JOIN shop ON palager.shopID = shop.shopID
+                WHERE product.categoryID = 1
+                GROUP BY palager.shopID, shop.shopAddress
+                ORDER BY pants DESC LIMIT 1
+                """);
+        if (!resultSet.next()){
+            throw new SQLException("No shops found");
+        }
+        return new TopStore(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3));
+
+    }
 }

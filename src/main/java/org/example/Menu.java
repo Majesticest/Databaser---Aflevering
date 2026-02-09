@@ -59,6 +59,10 @@ public class Menu {
                         int orderID = storefront.createOrder(loggedInUser.id(), orderItems);
                         System.out.println("Your order has been submitted with the following id: " + orderID);
                         break;
+                    case 4:
+                        TopStore t = storefront.useless();
+                        System.out.println(String.format("Store number %d: %d in stock, %s", t.shopID(), t.stock(), t.address()));
+
                     default:
                         // go back or return
                         break;
