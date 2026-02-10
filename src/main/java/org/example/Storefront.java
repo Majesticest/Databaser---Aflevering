@@ -138,14 +138,13 @@ public class Storefront {
     }
 
     //can change the stock amount
-    public void updateStock(int productID, int shopID, int change) throws SQLException {
+    public void updateStock(int productID, int change) throws SQLException {
         // change is the number to increase or decrease the given products stock with
         // i.e. -1 when selling an item
         Statement stmt = this.connection.createStatement();
 
-        stmt.executeUpdate("UPDATE palager SET stock = stock + " + change +
-                " WHERE productID = " + productID +
-                " AND shopID = " + shopID
+        stmt.executeUpdate("UPDATE product SET stock = stock + " + change +
+                " WHERE productID = " + productID
         );
 
     }
@@ -186,6 +185,8 @@ public class Storefront {
             stmt.setInt(1, orderID);
             stmt.setInt(2, prodID);
             stmt.execute();
+            Statement statement1 = this.connection.createStatement();
+            updateStock(prodID, -1);
 
         }
         return orderID;
