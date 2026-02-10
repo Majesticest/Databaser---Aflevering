@@ -51,7 +51,7 @@ public class Storefront {
     public List<Product> getProducts(int maxPrice) throws SQLException {
         Statement stmt = this.connection.createStatement();
 
-        ResultSet resultSet = stmt.executeQuery("SELECT * FROM product JOIN category ON (product.categoryID=category.categoryID) WHERE price <= " + maxPrice);
+        ResultSet resultSet = stmt.executeQuery("SELECT * FROM product JOIN category ON (product.categoryID=category.categoryID) WHERE price <= " + maxPrice + " AND amount >" + 0);
         List<Product> products = new ArrayList<>();
         while (resultSet.next()) {
             products.add(getProduct(resultSet));
@@ -143,7 +143,7 @@ public class Storefront {
         // i.e. -1 when selling an item
         Statement stmt = this.connection.createStatement();
 
-        stmt.executeUpdate("UPDATE product SET stock = stock + " + change +
+        stmt.executeUpdate("UPDATE product SET amount = amount + " + change +
                 " WHERE productID = " + productID
         );
 
